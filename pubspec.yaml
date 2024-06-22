@@ -33,8 +33,9 @@ dependencies:
 
   cupertino_icons: ^1.0.6
 
-  google_sign_in: ^6.2.1
-
+  # oAuth
+  flutter_appauth: ^6.0.6
+  
   provider: ^6.1.2
 
   # secure storage

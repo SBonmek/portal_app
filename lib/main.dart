@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:portal_app/core/config/app_routes.dart';
 import 'package:portal_app/features/data/repositories/repositories.dart';
 import 'package:portal_app/features/presentation/home/home_screen.dart';
-import 'package:portal_app/features/presentation/login/login_screen.dart';
 import 'package:portal_app/features/presentation/web_view/web_view.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +9,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthenRepository()),
+        ChangeNotifierProvider(create: (context) => AuthRepository()),
         ChangeNotifierProvider(create: (context) => NewsBannerRepository()),
         ChangeNotifierProvider(create: (context) => PortalRepository()),
       ],
@@ -25,6 +24,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    context.read<AuthRepository>().checkToken(context);
     return MaterialApp(
       title: "Portal App",
       theme: ThemeData(

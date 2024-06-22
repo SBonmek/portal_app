@@ -4,7 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:portal_app/core/app_layout/app_layout.dart';
 import 'package:portal_app/core/config/app_routes.dart';
-import 'package:portal_app/features/data/repositories/authen_repository.dart';
+import 'package:portal_app/features/data/repositories/auth_repository.dart';
 import 'package:portal_app/features/data/repositories/news_banner_repository.dart';
 import 'package:portal_app/features/data/repositories/portal_repository.dart';
 import 'package:portal_app/features/presentation/web_view/web_view.dart';
@@ -20,12 +20,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final authenState = Provider.of<AuthenRepository>(context);
+    final authRepo = Provider.of<AuthRepository>(context);
     Provider.of<NewsBannerRepository>(context, listen: false);
     Provider.of<PortalRepository>(context, listen: false);
     return AppLayout(
       body: Visibility(
-        visible: authenState.isChecked,
+        visible: authRepo.isLoaded,
         replacement: const Center(child: CircularProgressIndicator()),
         child: ListView(
           children: <Widget>[

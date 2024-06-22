@@ -39,7 +39,7 @@ Future<dynamic> getToken() async {
 
 Future getExpireTokenDateTime() async {
   final token = await getToken();
-  final decodeUserToken = parseJwt(token["access_token"]);
+  final decodeUserToken = parseJwt(token["accessToken"]);
   return DateTime.fromMillisecondsSinceEpoch(
     decodeUserToken["exp"] * 1000,
   );

@@ -37,7 +37,7 @@ class PortalRepository extends ChangeNotifier {
         );
       }
     } catch (error) {
-      portalList = _mockPortalList;
+      portalList.addAll(_mockPortalList);
     }
 
     isLoaded = true;

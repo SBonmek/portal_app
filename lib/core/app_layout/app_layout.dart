@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portal_app/core/app_layout/sidebar.dart';
-import 'package:portal_app/core/config/app_routes.dart';
-import 'package:portal_app/features/data/repositories/authen_repository.dart';
+import 'package:portal_app/features/data/repositories/auth_repository.dart';
 import 'package:provider/provider.dart';
 
 class AppLayout extends StatelessWidget {
@@ -26,7 +25,7 @@ class AppLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AuthenRepository>(context, listen: false);
+    Provider.of<AuthRepository>(context, listen: false);
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,
@@ -49,16 +48,16 @@ class AppLayout extends StatelessWidget {
           ),
           actions: <Widget>[
             ...actions,
-            Consumer<AuthenRepository>(
-              builder: (_, authenState, __) {
+            Consumer<AuthRepository>(
+              builder: (_, authRepo, __) {
                 return Visibility(
-                  visible: !authenState.isLogin,
+                  visible: !authRepo.isSignedIn,
                   child: IconButton(
                     icon: const Icon(
                       Icons.login_rounded,
                       color: Colors.white,
                     ),
-                    onPressed: () => authenState.signInWithGoogle(context),
+                    onPressed: () => authRepo.signInWithKeyCloak(context),
                   ),
                 );
               },

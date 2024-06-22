@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:portal_app/core/config/app_routes.dart';
-import 'package:portal_app/features/data/repositories/authen_repository.dart';
+import 'package:portal_app/features/data/repositories/auth_repository.dart';
 import 'package:provider/provider.dart';
 
 class Sidebar extends StatelessWidget {
@@ -8,10 +7,10 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AuthenRepository>(context, listen: false);
+    Provider.of<AuthRepository>(context, listen: false);
     return Drawer(
-      child: Consumer<AuthenRepository>(
-        builder: (_, authenState, __) {
+      child: Consumer<AuthRepository>(
+        builder: (_, authRepo, __) {
           return Column(
             children: <Widget>[
               Container(
@@ -29,17 +28,16 @@ class Sidebar extends StatelessWidget {
                   foregroundColor: Colors.white,
                   backgroundColor: Colors.green,
                   child: Visibility(
-                    visible: authenState.isLogin,
+                    visible: authRepo.isSignedIn,
                     replacement: const Icon(
                       Icons.person,
                       size: 80,
                     ),
                     child: Image.network(
-                      authenState.userInfoes?.photoUrl ?? "",
+                      authRepo.userInfoes?.photoUrl ?? "",
                       errorBuilder: (context, error, stackTrace) => Text(
-                        authenState.userInfoes?.displayName != null
-                            ? authenState.userInfoes!.displayName!
-                                .substring(0, 1)
+                        authRepo.userInfoes?.displayName != null
+                            ? authRepo.userInfoes!.displayName!.substring(0, 1)
                             : "N/A",
                         style:
                             Theme.of(context).textTheme.displayMedium!.copyWith(
@@ -52,9 +50,9 @@ class Sidebar extends StatelessWidget {
                 ),
               ),
               Visibility(
-                visible: authenState.isLogin,
+                visible: authRepo.isSignedIn,
                 child: Text(
-                  authenState.userInfoes?.displayName ?? "N/A",
+                  authRepo.userInfoes?.displayName ?? "N/A",
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge!
@@ -62,12 +60,12 @@ class Sidebar extends StatelessWidget {
                 ),
               ),
               Visibility(
-                visible: authenState.isLogin,
+                visible: authRepo.isSignedIn,
                 replacement: Container(
                   margin: const EdgeInsets.all(20),
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      authenState.signInWithGoogle(context);
+                      authRepo.signInWithKeyCloak(context);
                     },
                     icon: const Icon(Icons.login_rounded),
                     label: Text(
@@ -89,7 +87,7 @@ class Sidebar extends StatelessWidget {
                 child: Container(
                   margin: const EdgeInsets.all(20),
                   child: ElevatedButton.icon(
-                    onPressed: () => authenState.signOut(),
+                    onPressed: () => authRepo.signOut(context),
                     icon: const Icon(Icons.logout_rounded),
                     label: Text(
                       "Logout",
