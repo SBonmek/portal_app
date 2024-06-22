@@ -58,8 +58,7 @@ class AppLayout extends StatelessWidget {
                       Icons.login_rounded,
                       color: Colors.white,
                     ),
-                    onPressed: () =>
-                        Navigator.of(context).pushNamed(AppRoutes.login),
+                    onPressed: () => authenState.signInWithGoogle(context),
                   ),
                 );
               },

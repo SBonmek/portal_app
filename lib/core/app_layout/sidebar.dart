@@ -67,7 +67,7 @@ class Sidebar extends StatelessWidget {
                   margin: const EdgeInsets.all(20),
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.of(context).pushNamed(AppRoutes.login);
+                      authenState.signInWithGoogle(context);
                     },
                     icon: const Icon(Icons.login_rounded),
                     label: Text(
