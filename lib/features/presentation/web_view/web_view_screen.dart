@@ -117,14 +117,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
         child: Column(
           children: <Widget>[
-            // ElevatedButton(
-            //   onPressed: () {
-            //     _controller.runJavaScript(
-            //       'Toaster.postMessage("User Agent: " + navigator.userAgent);',
-            //     );
-            //   },
-            //   child: Text("Toaster"),
-            // ),
+            ElevatedButton(
+              onPressed: () {
+                _controller.runJavaScript(
+                  'Toaster.postMessage("User Agent: " + navigator.userAgent);',
+                );
+              },
+              child: Text("Toaster"),
+            ),
             Expanded(
               child: WebViewWidget(
                 controller: _controller,
