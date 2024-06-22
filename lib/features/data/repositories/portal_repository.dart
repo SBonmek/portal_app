@@ -3,25 +3,25 @@ import 'package:portal_app/core/config/config.dart';
 import 'package:portal_app/core/networks/http_request_wrapper.dart';
 
 // default data when request error
-List<String> _mockNewsBannerList = List.generate(10, (index) => "${index + 1}");
+List<String> _mockPortalList = List.generate(20, (index) => "${index + 1}");
 
-class NewsBannerRepository extends ChangeNotifier {
-  NewsBannerRepository() {
-    getNewsBannerList();
+class PortalRepository extends ChangeNotifier {
+  PortalRepository() {
+    getPortalList();
   }
   // temp data
   bool isLoaded = false;
-  List<String> newsBannerList = [];
+  List<String> portalList = [];
 
   // request api
   final HttpRequestWrapper _httpRequestWrapper = HttpRequestWrapperImpl();
-  final String api = "newsBanner";
+  final String api = "picsum.photos";
 
-  Future<void> getNewsBannerList() async {
+  Future<void> getPortalList() async {
     try {
       isLoaded = false;
       notifyListeners();
-      newsBannerList.clear();
+      portalList.clear();
 
       final results = await _httpRequestWrapper.listPagedRestful(
         pagedRestful: "v2/list",
@@ -29,7 +29,7 @@ class NewsBannerRepository extends ChangeNotifier {
       );
 
       if (results.isNotEmpty) {
-        newsBannerList.addAll(
+        portalList.addAll(
           results
               .map((result) => result["download_url"])
               .cast<String>()
@@ -37,7 +37,7 @@ class NewsBannerRepository extends ChangeNotifier {
         );
       }
     } catch (error) {
-      newsBannerList = _mockNewsBannerList;
+      portalList = _mockPortalList;
     }
 
     isLoaded = true;

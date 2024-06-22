@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:portal_app/core/config/app_routes.dart';
-import 'package:portal_app/features/data/repositories/authen_repository.dart';
+import 'package:portal_app/features/data/repositories/repositories.dart';
 import 'package:portal_app/features/presentation/home/home_screen.dart';
+import 'package:portal_app/features/presentation/login/login_screen.dart';
 import 'package:portal_app/features/presentation/web_view/web_view.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthenRepository()),
+        ChangeNotifierProvider(create: (context) => NewsBannerRepository()),
+        ChangeNotifierProvider(create: (context) => PortalRepository()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,17 +25,14 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => AuthenRepository(),
-      child: MaterialApp(
-        title: "Portal App",
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
-        routes: _registerRoutes(),
-        onGenerateRoute: _registerRoutesWithParameters,
+    return MaterialApp(
+      title: "Portal App",
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
+      routes: _registerRoutes(),
+      onGenerateRoute: _registerRoutesWithParameters,
     );
   }
 }
