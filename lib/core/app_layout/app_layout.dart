@@ -57,7 +57,7 @@ class AppLayout extends StatelessWidget {
                       Icons.login_rounded,
                       color: Colors.white,
                     ),
-                    onPressed: () => authRepo.signInWithKeyCloak(context),
+                    onPressed: () => authRepo.signIn(context),
                   ),
                 );
               },

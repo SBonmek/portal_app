@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:portal_app/core/app_layout/app_layout.dart';
 import 'package:portal_app/core/config/config.dart';
+import 'package:portal_app/features/data/repositories/auth_repository.dart';
+import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 // Import for Android features.
 import 'package:webview_flutter_android/webview_flutter_android.dart';
@@ -88,7 +90,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ..addJavaScriptChannel(
         'Toaster',
         onMessageReceived: (JavaScriptMessage message) {
-          print("message: $message");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(message.message)),
           );
@@ -109,28 +110,25 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authRepo = Provider.of<AuthRepository>(context);
     return AppLayout(
       body: Visibility(
-        visible: !isLoading,
-        replacement: const Center(
-          child: CircularProgressIndicator(),
-        ),
-        child: Column(
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                _controller.runJavaScript(
-                  'Toaster.postMessage("User Agent: " + navigator.userAgent);',
-                );
-              },
-              child: Text("Toaster"),
-            ),
-            Expanded(
-              child: WebViewWidget(
-                controller: _controller,
+        visible: authRepo.isLoaded,
+        replacement: const Center(child: CircularProgressIndicator()),
+        child: Visibility(
+          visible: !isLoading,
+          replacement: const Center(
+            child: CircularProgressIndicator(),
+          ),
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                child: WebViewWidget(
+                  controller: _controller,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

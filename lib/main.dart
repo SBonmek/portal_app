@@ -10,7 +10,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthRepository()),
-        ChangeNotifierProvider(create: (context) => NewsBannerRepository()),
+        ChangeNotifierProvider(create: (context) => NewsRepository()),
         ChangeNotifierProvider(create: (context) => PortalRepository()),
       ],
       child: const MyApp(),

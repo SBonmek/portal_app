@@ -1,4 +1,3 @@
 class ServerAddresses {
-  static const serverUrl = "https://";
-  static const restEnpoint = "$serverUrl/api";
+  static const serverUrl = "https://api.pupasoft.com";
 }

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:portal_app/core/config/config.dart';
-import 'package:portal_app/core/networks/http_request_wrapper.dart';
-
-// default data when request error
-List<String> _mockPortalList = List.generate(20, (index) => "${index + 1}");
+import 'package:portal_app/features/data/models/portal_model.dart';
+import 'package:portal_app/features/data/remotes/portal_remote.dart';
 
 class PortalRepository extends ChangeNotifier {
   PortalRepository() {
@@ -11,11 +8,9 @@ class PortalRepository extends ChangeNotifier {
   }
   // temp data
   bool isLoaded = false;
-  List<String> portalList = [];
+  List<PortalModel> portalList = [];
 
-  // request api
-  final HttpRequestWrapper _httpRequestWrapper = HttpRequestWrapperImpl();
-  final String api = "picsum.photos";
+  final PortalRemote _portalRemote = PortalRemoteImpl();
 
   Future<void> getPortalList() async {
     try {
@@ -23,21 +18,11 @@ class PortalRepository extends ChangeNotifier {
       notifyListeners();
       portalList.clear();
 
-      final results = await _httpRequestWrapper.listPagedRestful(
-        pagedRestful: "v2/list",
-        customUrl: "${ServerAddresses.serverUrl}$api",
-      );
-
-      if (results.isNotEmpty) {
-        portalList.addAll(
-          results
-              .map((result) => result["download_url"])
-              .cast<String>()
-              .toList(),
-        );
-      }
+      portalList = await _portalRemote.getPortalList();
+      
     } catch (error) {
-      portalList.addAll(_mockPortalList);
+      print(error);
+      portalList.clear();
     }
 
     isLoaded = true;

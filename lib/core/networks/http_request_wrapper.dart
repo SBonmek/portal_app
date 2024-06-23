@@ -11,7 +11,6 @@ abstract class HttpRequestWrapper {
     required String pagedRestful,
     required int id,
     String? template,
-    String? customUrl,
   });
   Future<dynamic> listPagedRestful({
     required String pagedRestful,
@@ -21,12 +20,6 @@ abstract class HttpRequestWrapper {
     String? order,
     int? offset,
     int? max,
-    String? customUrl,
-  });
-  Future<Map<String, dynamic>> postWithEndPointAndData({
-    required String endpoint,
-    required Map<String, dynamic> data,
-    bool isLoginRequest = false,
   });
 }
 
@@ -36,7 +29,6 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
     required String pagedRestful,
     required int id,
     String? template,
-    String? customUrl,
   }) async {
     String params = "";
     if (template != null) {
@@ -44,7 +36,7 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
     }
 
     Uri uri = Uri.parse(
-      "${customUrl ?? ServerAddresses.restEnpoint}/$pagedRestful/$id?$params",
+      "${ServerAddresses.serverUrl}/$pagedRestful/$id?$params",
     );
 
     return await _getMethod(uri);
@@ -59,7 +51,6 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
     String? order,
     int? offset,
     int? max,
-    String? customUrl,
   }) async {
     String params = "";
     if (template != null) {
@@ -82,28 +73,15 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
     }
 
     Uri uri = Uri.parse(
-      "${customUrl ?? ServerAddresses.restEnpoint}/$pagedRestful?$params",
+      "${ServerAddresses.serverUrl}/$pagedRestful?$params",
     );
 
     return await _getMethod(uri);
   }
 
-  @override
-  Future<Map<String, dynamic>> postWithEndPointAndData({
-    required String endpoint,
-    required Map<String, dynamic> data,
-    bool isLoginRequest = false,
-  }) async {
-    return await _postMethod(
-      uri: Uri.parse(endpoint),
-      data: data,
-      isLoginRequest: isLoginRequest,
-    );
-  }
-
   Future<dynamic> _getMethod(Uri uri) async {
     final client = http.Client();
-    final interceptorHeader = _getInterceptorHeader();
+    final interceptorHeader = await _getInterceptorHeader();
 
     try {
       final response = await client.get(uri, headers: {...interceptorHeader});
@@ -111,7 +89,7 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
           response.body.isNotEmpty ? jsonDecode(response.body) : {};
 
       if (response.statusCode == 200) {
-        return jsonResponse["data"] ?? jsonResponse;
+        return jsonResponse;
       } else {
         throw ServerException(
           errorStatus: response.statusCode,
@@ -126,45 +104,12 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
     }
   }
 
-  Future<Map<String, dynamic>> _postMethod(
-      {required Uri uri,
-      required Map<String, dynamic> data,
-      bool isLoginRequest = false}) async {
-    final client = http.Client();
-    final interceptorHeader = isLoginRequest ? {} : _getInterceptorHeader();
+  Future<Map<String, dynamic>> _getInterceptorHeader() async {
+    final token = await getToken();
 
-    try {
-      final response = await client.post(
-        uri,
-        headers: {...interceptorHeader},
-        body: json.encode(data),
-      );
-      final jsonResponse =
-          response.body.isNotEmpty ? jsonDecode(response.body) : {};
-
-      if (response.statusCode == 200) {
-        return jsonResponse["data"] ?? jsonResponse;
-      } else {
-        throw ServerException(
-          errorStatus: response.statusCode,
-          message:
-              "Status ${response.statusCode} : ${jsonResponse?["error"] != null ? jsonResponse["error"]["message"] : "request error"}",
-        );
-      }
-    } catch (error) {
-      throw error.toString();
-    } finally {
-      client.close();
-    }
-  }
-
-  Map<String, dynamic> _getInterceptorHeader() {
-    // final accessToken = await getToken();
-    final accessToken = "";
-
-    if (accessToken.isNotEmpty) {
+    if (token != null) {
       return {
-        "Authorization": "Bearer DEV::sagolwong::ROLE_USER",
+        "Authorization": "Bearer ${token["accessToken"]}",
         "content-type": "application/json"
       };
     } else {
