@@ -1,8 +1,6 @@
-import "dart:convert";
-
+import "package:dio/dio.dart";
 import "package:portal_app/core/config/server_addresses.dart";
 import "package:portal_app/core/errors/exceptions.dart";
-import "package:http/http.dart" as http;
 import "package:portal_app/core/utils/secure_token_storage.dart";
 
 abstract class HttpRequestWrapper {
@@ -35,11 +33,9 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
       params += "__template=$template";
     }
 
-    Uri uri = Uri.parse(
+    return await _getMethod(
       "${ServerAddresses.serverUrl}/$pagedRestful/$id?$params",
     );
-
-    return await _getMethod(uri);
   }
 
   @override
@@ -72,21 +68,21 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
       params += "max=$max&";
     }
 
-    Uri uri = Uri.parse(
+    return await _getMethod(
       "${ServerAddresses.serverUrl}/$pagedRestful?$params",
     );
-
-    return await _getMethod(uri);
   }
 
-  Future<dynamic> _getMethod(Uri uri) async {
-    final client = http.Client();
+  Future<dynamic> _getMethod(String uri) async {
+    final Dio dio = Dio();
     final interceptorHeader = await _getInterceptorHeader();
 
     try {
-      final response = await client.get(uri, headers: {...interceptorHeader});
-      final jsonResponse =
-          response.body.isNotEmpty ? jsonDecode(response.body) : {};
+      final response = await dio.get(
+        uri,
+        options: Options(headers: {...interceptorHeader}),
+      );
+      final jsonResponse = response.data.isNotEmpty ? response.data : {};
 
       if (response.statusCode == 200) {
         return jsonResponse;
@@ -100,7 +96,7 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
     } catch (error) {
       throw error.toString();
     } finally {
-      client.close();
+      dio.close();
     }
   }
 

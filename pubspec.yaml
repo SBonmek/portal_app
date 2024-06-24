@@ -45,7 +45,7 @@ dependencies:
   json_annotation: ^4.9.0
 
   # network
-  http: ^1.2.1
+  dio: ^5.4.3+1
 
   # carousal
   carousel_slider: ^4.2.1
