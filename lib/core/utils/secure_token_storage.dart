@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:portal_app/core/config/storage.dart';
 import 'package:portal_app/core/utils/parse_jwt.dart';
+import 'package:portal_app/features/data/models/token_model.dart';
 
 /// delete from keystore/keychain
 Future<void> deleteToken() async {
@@ -13,8 +14,8 @@ Future<void> deleteToken() async {
 }
 
 /// write to keystore/keychain
-Future<void> saveToken(dynamic token) async {
-  String encodeToken = json.encode(token);
+Future<void> saveToken(TokenModel token) async {
+  String encodeToken = json.encode(token.toJson());
   await Storage.secureStorage.write(
     key: 'auth_token',
     value: encodeToken,
@@ -23,7 +24,7 @@ Future<void> saveToken(dynamic token) async {
 }
 
 /// read to keystore/keychain
-Future<dynamic> getToken() async {
+Future<TokenModel?> getToken() async {
   final encodeToken = await Storage.secureStorage.read(
         key: 'auth_token',
         aOptions: _getAndroidOptions(),
@@ -31,7 +32,7 @@ Future<dynamic> getToken() async {
       "";
 
   if (encodeToken.isNotEmpty) {
-    return json.decode(encodeToken);
+    return TokenModel.fromJson(json.decode(encodeToken));
   } else {
     return null;
   }
@@ -39,7 +40,7 @@ Future<dynamic> getToken() async {
 
 Future getExpireTokenDateTime() async {
   final token = await getToken();
-  final decodeUserToken = parseJwt(token["accessToken"]);
+  final decodeUserToken = parseJwt(token?.accessToken ?? "");
   return DateTime.fromMillisecondsSinceEpoch(
     decodeUserToken["exp"] * 1000,
   );

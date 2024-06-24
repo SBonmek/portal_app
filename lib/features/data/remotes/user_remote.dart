@@ -1,10 +1,15 @@
 import 'package:flutter_appauth/flutter_appauth.dart';
+import 'package:portal_app/core/config/config.dart';
 import 'package:portal_app/core/errors/exceptions.dart';
 import 'package:portal_app/core/networks/http_request_wrapper.dart';
+import 'package:portal_app/core/utils/secure_token_storage.dart';
+import 'package:portal_app/features/data/models/token_model.dart';
 import 'package:portal_app/features/data/models/user_profile_model.dart';
 
 abstract class UserRemote {
   Future<TokenResponse> signInWithKeyCloak();
+  Future<TokenResponse> refreshingToken();
+  Future<void> signOut();
   Future<UserProfileModel> getProfile();
 }
 
@@ -58,6 +63,47 @@ class UserRemoteImpl implements UserRemote {
         throw Exception("Authorization error");
       }
     } catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<TokenResponse> refreshingToken() async {
+    try {
+      TokenModel? token = await getToken();
+      if (token != null) {
+        final TokenResponse? tokenResponse = await _appAuth.token(
+          TokenRequest(
+            _clientId,
+            _redirectUrl,
+            discoveryUrl: _discoveryUrl,
+            refreshToken: token.refreshToken,
+            scopes: _scopes,
+          ),
+        );
+
+        if (tokenResponse != null) {
+          return tokenResponse;
+        }
+      }
+      throw Exception("Exchanging  Token error");
+    } catch (_) {
+      print(_);
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> signOut() async {
+    try {
+      await _appAuth.endSession(
+        EndSessionRequest(
+          idTokenHint: Storage.token!.idToken,
+          postLogoutRedirectUrl: 'com.example.portalapp:/',
+        ),
+      );
+    } catch (_) {
+      print(_);
       rethrow;
     }
   }

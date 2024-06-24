@@ -2,6 +2,7 @@ import "package:dio/dio.dart";
 import "package:portal_app/core/config/server_addresses.dart";
 import "package:portal_app/core/errors/exceptions.dart";
 import "package:portal_app/core/utils/secure_token_storage.dart";
+import "package:portal_app/features/data/models/token_model.dart";
 
 abstract class HttpRequestWrapper {
   // GET Method
@@ -101,11 +102,11 @@ class HttpRequestWrapperImpl implements HttpRequestWrapper {
   }
 
   Future<Map<String, dynamic>> _getInterceptorHeader() async {
-    final token = await getToken();
+    TokenModel? token = await getToken();
 
     if (token != null) {
       return {
-        "Authorization": "Bearer ${token["accessToken"]}",
+        "Authorization": "Bearer ${token.accessToken}",
         "content-type": "application/json"
       };
     } else {

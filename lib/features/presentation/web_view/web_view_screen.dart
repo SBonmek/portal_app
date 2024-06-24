@@ -25,7 +25,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   void initState() {
     super.initState();
 
-    String webUri = "${widget.webUri}${Storage.token.isNotEmpty ? "/" : ""}";
+    String webUri = "${widget.webUri}${Storage.token != null ? "" : ""}";
 
     // #docregion platform_features
     late final PlatformWebViewControllerCreationParams params;

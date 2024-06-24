@@ -3,6 +3,7 @@ import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:portal_app/core/config/config.dart';
 import 'package:portal_app/core/utils/secure_token_storage.dart';
 import 'package:portal_app/core/utils/show_error_snack_bar.dart';
+import 'package:portal_app/features/data/models/token_model.dart';
 import 'package:portal_app/features/data/models/user_profile_model.dart';
 import 'package:portal_app/features/data/remotes/user_remote.dart';
 import 'package:portal_app/features/data/repositories/news_repository.dart';
@@ -23,21 +24,23 @@ class AuthRepository extends ChangeNotifier {
 
     if (isSignedIn) {
       try {
+        final TokenResponse tokenResponse = await _userRemote.refreshingToken();
+
         // save user info
+        Storage.token = TokenModel(
+          idToken: tokenResponse.idToken!,
+          accessToken: tokenResponse.accessToken!,
+          refreshToken: tokenResponse.refreshToken!,
+        );
+        await saveToken(Storage.token!);
         userProfile = await _userRemote.getProfile();
-        Storage.token = await getToken();
 
         if (context.mounted) {
           context.read<NewsRepository>().getNewsList();
           context.read<PortalRepository>().getPortalList();
         }
       } catch (error) {
-        if (context.mounted) {
-          showErrorSnackBar(
-            context,
-            errorText: error.toString(),
-          );
-        }
+        print(error);
       }
     }
 
@@ -55,12 +58,12 @@ class AuthRepository extends ChangeNotifier {
           await _userRemote.signInWithKeyCloak();
 
       // save token
-      Storage.token = {
-        "idToken": tokenResponse.idToken,
-        "accessToken": tokenResponse.accessToken,
-        "refreshToken": tokenResponse.refreshToken,
-      };
-      await saveToken(Storage.token);
+      Storage.token = TokenModel(
+        idToken: tokenResponse.idToken!,
+        accessToken: tokenResponse.accessToken!,
+        refreshToken: tokenResponse.refreshToken!,
+      );
+      await saveToken(Storage.token!);
 
       // save user info
       userProfile = await _userRemote.getProfile();
@@ -101,9 +104,10 @@ class AuthRepository extends ChangeNotifier {
     notifyListeners();
 
     //TODO request sign out
+    // await _userRemote.signOut();
 
     // clear user info & token
-    Storage.token.clear();
+    Storage.token = null;
     deleteToken();
     userProfile = null;
 
