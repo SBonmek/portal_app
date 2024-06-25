@@ -26,7 +26,6 @@ class AppLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AuthRepository>(context, listen: false);
     return SafeArea(
       child: Scaffold(
         key: _scaffoldKey,

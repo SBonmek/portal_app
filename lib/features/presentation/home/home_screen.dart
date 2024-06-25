@@ -20,8 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final authRepo = Provider.of<AuthRepository>(context);
-    Provider.of<NewsRepository>(context, listen: false);
-    Provider.of<PortalRepository>(context, listen: false);
     return AppLayout(
       body: Visibility(
         visible: authRepo.isLoaded,

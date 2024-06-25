@@ -9,7 +9,6 @@ class Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<AuthRepository>(context, listen: false);
     return Drawer(
       child: Consumer<AuthRepository>(
         builder: (_, authRepo, __) {
