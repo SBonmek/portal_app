@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.all(20),
                     children: portalRepo.portalList
                         .map(
-                          (portal) => InkWell(
+                          (portal) => GestureDetector(
                             onTap: () {
                               if (portal.link != null) {
                                 Navigator.of(context).pushNamed(
