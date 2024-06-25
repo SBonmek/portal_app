@@ -73,6 +73,8 @@ class AuthRepository extends ChangeNotifier {
         context.read<NewsRepository>().getNewsList();
         context.read<PortalRepository>().getPortalList();
       }
+
+      isSignedIn = true;
     } catch (error) {
       if (context.mounted) {
         showErrorSnackBar(
@@ -83,7 +85,6 @@ class AuthRepository extends ChangeNotifier {
     }
 
     isLoaded = true;
-    isSignedIn = true;
     notifyListeners();
   }
 
