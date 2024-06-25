@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               } else {
                                 showErrorSnackBar(
                                   context,
-                                  errorText: "Don't have link.",
+                                  errorText: "ไม่พร้อมให้บริการ",
                                 );
                               }
                             },
