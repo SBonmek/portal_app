@@ -100,7 +100,7 @@ class AuthRepository extends ChangeNotifier {
     return false;
   }
 
-  signOut(BuildContext context) async {
+  signOut(BuildContext context) {
     isLoaded = false;
     notifyListeners();
 
