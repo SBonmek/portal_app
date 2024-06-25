@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:portal_app/core/app_layout/app_layout.dart';
-import 'package:portal_app/core/config/app_routes.dart';
 import 'package:portal_app/core/config/config.dart';
 import 'package:portal_app/core/utils/show_error_snack_bar.dart';
 import 'package:portal_app/features/data/repositories/auth_repository.dart';
@@ -41,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         .map(
                           (news) => Container(
                             decoration: BoxDecoration(
-                              color: Colors.black,
+                              color: AppColors.background,
                               image: DecorationImage(
                                 image: NetworkImage(
                                   news.imageUrl,
@@ -97,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 borderRadius: BorderRadius.circular(12),
                                 boxShadow: <BoxShadow>[
                                   BoxShadow(
-                                    color: Colors.grey.withOpacity(0.5),
+                                    color: AppColors.darkGray.withOpacity(0.5),
                                     spreadRadius: 1,
                                     blurRadius: 5,
                                     offset: const Offset(0, 3),

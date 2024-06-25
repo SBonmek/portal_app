@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portal_app/core/config/app_routes.dart';
+import 'package:portal_app/core/config/app_theme.dart';
 import 'package:portal_app/features/data/repositories/repositories.dart';
 import 'package:portal_app/features/presentation/home/home_screen.dart';
 import 'package:portal_app/features/presentation/web_view/web_view.dart';
@@ -27,10 +28,7 @@ class MyApp extends StatelessWidget {
     context.read<AuthRepository>().checkToken(context);
     return MaterialApp(
       title: "Portal App",
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.of(context),
       routes: _registerRoutes(),
       onGenerateRoute: _registerRoutesWithParameters,
     );

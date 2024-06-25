@@ -25,8 +25,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
   void initState() {
     super.initState();
 
-    String webUri = "${widget.webUri}${Storage.token != null ? "" : ""}";
-
     // #docregion platform_features
     late final PlatformWebViewControllerCreationParams params;
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
@@ -44,7 +42,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
     controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
+      ..setBackgroundColor(AppColors.background)
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
@@ -95,7 +93,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           );
         },
       )
-      ..loadRequest(Uri.parse(webUri));
+      ..loadRequest(Uri.parse(widget.webUri));
 
     // #docregion platform_features
     if (controller.platform is AndroidWebViewController) {

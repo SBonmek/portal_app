@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:portal_app/core/config/config.dart';
 import 'package:portal_app/features/data/repositories/auth_repository.dart';
 import 'package:provider/provider.dart';
 
 class Sidebar extends StatelessWidget {
-  const Sidebar({super.key});
+  final BuildContext appLayoutContext;
+  const Sidebar(this.appLayoutContext, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +22,13 @@ class Sidebar extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.white,
+                    color: AppColors.white,
                     width: 4,
                   ),
                 ),
                 child: CircleAvatar(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.green,
+                  foregroundColor: AppColors.white,
+                  backgroundColor: AppColors.green,
                   foregroundImage:
                       NetworkImage(authRepo.userProfile?.profileImage ?? ""),
                   child: Visibility(
@@ -44,10 +46,7 @@ class Sidebar extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium!
-                                .copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                .copyWith(color: AppColors.white),
                           )
                         : Container(),
                   ),
@@ -57,10 +56,7 @@ class Sidebar extends StatelessWidget {
                 visible: authRepo.isSignedIn,
                 child: Text(
                   authRepo.userProfile?.givenName ?? "N/A",
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleLarge!
-                      .copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
               ),
               Visibility(
@@ -69,7 +65,7 @@ class Sidebar extends StatelessWidget {
                   margin: const EdgeInsets.all(20),
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      authRepo.signIn(context);
+                      authRepo.signIn(appLayoutContext);
                     },
                     icon: const Icon(Icons.login_rounded),
                     label: Text(
@@ -77,14 +73,10 @@ class Sidebar extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium!
-                          .copyWith(color: Colors.white),
+                          .copyWith(color: AppColors.white),
                     ),
                     style: ElevatedButton.styleFrom(
-                      iconColor: Colors.white,
-                      backgroundColor: Colors.blue,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      backgroundColor: AppColors.blue,
                     ),
                   ),
                 ),
@@ -98,14 +90,10 @@ class Sidebar extends StatelessWidget {
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium!
-                          .copyWith(color: Colors.white),
+                          .copyWith(color: AppColors.white),
                     ),
                     style: ElevatedButton.styleFrom(
-                      iconColor: Colors.white,
-                      backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                      backgroundColor: AppColors.red,
                     ),
                   ),
                 ),

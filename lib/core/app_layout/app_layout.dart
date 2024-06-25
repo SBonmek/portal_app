@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portal_app/core/app_layout/sidebar.dart';
+import 'package:portal_app/core/config/config.dart';
 import 'package:portal_app/features/data/repositories/auth_repository.dart';
 import 'package:provider/provider.dart';
 
@@ -35,14 +36,12 @@ class AppLayout extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
-                .copyWith(color: Colors.white),
+                .copyWith(color: AppColors.white),
           ),
           centerTitle: true,
-          backgroundColor: Colors.blue,
           leading: IconButton(
             icon: const Icon(
               Icons.menu,
-              color: Colors.white,
             ),
             onPressed: () => _scaffoldKey.currentState!.openDrawer(),
           ),
@@ -53,10 +52,7 @@ class AppLayout extends StatelessWidget {
                 return Visibility(
                   visible: !authRepo.isSignedIn,
                   child: IconButton(
-                    icon: const Icon(
-                      Icons.login_rounded,
-                      color: Colors.white,
-                    ),
+                    icon: const Icon(Icons.login_rounded),
                     onPressed: () => authRepo.signIn(context),
                   ),
                 );
@@ -67,7 +63,7 @@ class AppLayout extends StatelessWidget {
         body: body,
         backgroundColor:
             backgroundColor ?? Theme.of(context).scaffoldBackgroundColor,
-        drawer: const Sidebar(),
+        drawer: Sidebar(context),
         floatingActionButton: floatingActionButton,
         floatingActionButtonLocation: floatingActionButtonLocation,
       ),
